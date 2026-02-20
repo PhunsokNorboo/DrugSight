@@ -876,6 +876,57 @@ def main() -> None:
         height=min(38 * len(display_df) + 40, 780),
     )
 
+    # -- Drill-down: all target interactions for a selected drug --
+    st.markdown(
+        "<p style='color:#64748b;font-size:0.85rem;margin-top:0.5rem;'>"
+        "Each drug above shows its best-scoring target. Expand below to see "
+        "how a drug interacts with <b>all</b> targets for this disease.</p>",
+        unsafe_allow_html=True,
+    )
+
+    drill_drug = st.selectbox(
+        "Explore all targets for a drug",
+        options=df["drug_name"].unique().tolist(),
+        index=0,
+        key="drill_drug_select",
+    )
+
+    drug_all_targets = (
+        df_all[df_all["drug_name"] == drill_drug]
+        .sort_values("composite_score", ascending=False)
+        .reset_index(drop=True)
+    )
+
+    if not drug_all_targets.empty:
+        drill_cols = [
+            "target_symbol",
+            "affinity_kcal_mol",
+            "composite_score",
+            "top_contributing_factor",
+        ]
+        drill_display = drug_all_targets[drill_cols].copy()
+        drill_display.columns = [
+            "Target Protein",
+            "Binding Affinity (kcal/mol)",
+            "Composite Score",
+            "Top Contributing Factor",
+        ]
+        drill_display.insert(0, "#", range(1, len(drill_display) + 1))
+        drill_display["Composite Score"] = drill_display["Composite Score"].apply(
+            lambda x: f"{x:.2f}"
+        )
+
+        st.markdown(
+            f"<p style='color:#7dd3fc;font-weight:600;'>"
+            f"{drill_drug} — {len(drug_all_targets)} target interaction(s)</p>",
+            unsafe_allow_html=True,
+        )
+        st.dataframe(
+            drill_display,
+            use_container_width=True,
+            hide_index=True,
+        )
+
     st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
 
     # ====================================================================
