@@ -30,7 +30,7 @@ def _require_binary(name: str) -> str:
     # Check PATH first, then common local install locations.
     location = shutil.which(name)
     if location is None:
-        for extra_dir in (Path.home() / "bin", Path("/usr/local/bin")):
+        for extra_dir in (Path.home() / "bin", Path("/usr/local/bin"), Path("/opt/homebrew/bin")):
             candidate = extra_dir / name
             if candidate.is_file():
                 location = str(candidate)

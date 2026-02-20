@@ -208,7 +208,9 @@ def merge_features(
     df = docking_df.copy()
 
     # Map affinity_kcal_mol → binding_affinity (negate so higher = better).
-    df["binding_affinity"] = df["affinity_kcal_mol"].abs()
+    # In docking, more negative kcal/mol = stronger binding.
+    # Negating makes -7.8 → 7.8 (good) and +8.2 → -8.2 (bad).
+    df["binding_affinity"] = -df["affinity_kcal_mol"]
 
     # ── Join AlphaFold pLDDT confidence ──────────────────────────────────
     if confidence_list:

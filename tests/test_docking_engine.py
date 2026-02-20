@@ -207,12 +207,13 @@ def test_batch_dock_handles_failures(
 
 
 def test_missing_vina_binary_raises_error():
-    """When 'vina' is not on PATH, _require_binary raises RuntimeError."""
+    """When 'vina' is not found anywhere, _require_binary raises RuntimeError."""
     from drugsight.docking_engine import _require_binary
 
     with patch("drugsight.docking_engine.shutil.which", return_value=None):
-        with pytest.raises(RuntimeError, match="not found on PATH"):
-            _require_binary("vina")
+        with patch("drugsight.docking_engine.Path.is_file", return_value=False):
+            with pytest.raises(RuntimeError, match="not found on PATH"):
+                _require_binary("vina")
 
 
 @patch("drugsight.docking_engine.subprocess.run")
