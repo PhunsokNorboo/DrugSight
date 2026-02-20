@@ -798,8 +798,17 @@ def main() -> None:
         )
         st.stop()
 
+    # Best-per-drug: keep only the highest-scoring row per drug for the
+    # candidates table so the same drug doesn't dominate every rank.
+    df_best = (
+        df_all.sort_values("composite_score", ascending=False)
+        .drop_duplicates(subset="drugbank_id", keep="first")
+        .reset_index(drop=True)
+    )
+    df_best["rank"] = range(1, len(df_best) + 1)
+
     # Limit to user-selected max results
-    df = df_all.head(max_results).copy()
+    df = df_best.head(max_results).copy()
 
     # ====================================================================
     # Section 1 -- Overview Metrics
@@ -809,13 +818,13 @@ def main() -> None:
     n_targets = df_all["target_symbol"].nunique()
     n_structures = df_all["uniprot_id"].nunique()
     n_drugs = df_all["drug_name"].nunique()
-    top_score = df_all["composite_score"].max()
+    top_score = df_best["composite_score"].max()
 
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Targets Found", n_targets)
     c2.metric("Structures Retrieved", n_structures)
     c3.metric("Drugs Screened", n_drugs)
-    c4.metric("Top Score", f"{top_score:.1f}", delta=f"+{top_score - df_all['composite_score'].median():.1f} vs median")
+    c4.metric("Top Score", f"{top_score:.1f}", delta=f"+{top_score - df_best['composite_score'].median():.1f} vs median")
 
     st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
 
@@ -949,7 +958,7 @@ def main() -> None:
         unsafe_allow_html=True,
     )
     st.plotly_chart(
-        _build_radar_chart(df_all),
+        _build_radar_chart(df_best),
         use_container_width=True,
         config={"displayModeBar": False},
     )
