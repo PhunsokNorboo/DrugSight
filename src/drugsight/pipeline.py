@@ -277,8 +277,15 @@ def run_pipeline_demo(
         logger.info("Loading sample targets from %s", sample_targets_path)
         with open(sample_targets_path, "r") as fh:
             targets_data = json.load(fh)
-        targets_df = pd.DataFrame(targets_data)
-        logger.info("Loaded %d sample targets", len(targets_df))
+
+        # Support both dict-keyed-by-disease and flat-list formats.
+        if isinstance(targets_data, dict):
+            disease_targets = targets_data.get(disease_id, [])
+            targets_df = pd.DataFrame(disease_targets)
+        else:
+            targets_df = pd.DataFrame(targets_data)
+
+        logger.info("Loaded %d sample targets for %s", len(targets_df), disease_id)
     else:
         logger.warning(
             "Sample targets JSON not found at %s — association scores will "
@@ -286,6 +293,19 @@ def run_pipeline_demo(
             sample_targets_path,
         )
         targets_df = pd.DataFrame()
+
+    # ── Filter docking results to this disease's targets ────────────────
+    if not targets_df.empty and "uniprot_id" in targets_df.columns:
+        disease_uniprots = set(targets_df["uniprot_id"].dropna().tolist())
+        if disease_uniprots:
+            docking_df = docking_df[
+                docking_df["uniprot_id"].isin(disease_uniprots)
+            ].copy()
+            logger.info(
+                "Filtered docking to %d rows for %d disease targets",
+                len(docking_df),
+                len(disease_uniprots),
+            )
 
     # ── Build synthetic AlphaFold confidence entries ───────────────────
     # The demo has no real AlphaFold calls, so we synthesize confidence

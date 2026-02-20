@@ -18,10 +18,21 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 @pytest.fixture()
 def sample_targets_df() -> pd.DataFrame:
+    """Load Huntington's targets as the default test fixture.
+
+    The targets JSON is a dict keyed by disease_id. We extract the
+    Huntington's disease entry (EFO_0000337) for backwards compatibility
+    with existing tests.
+    """
     path = DATA_DIR / "sample_targets.json"
     with open(path) as f:
         data = json.load(f)
-    df = pd.DataFrame(data)
+    # Support both dict-keyed and flat-list formats.
+    if isinstance(data, dict):
+        targets_list = data.get("EFO_0000337", [])
+    else:
+        targets_list = data
+    df = pd.DataFrame(targets_list)
     assert list(df.columns) == TARGET_COLUMNS
     return df
 

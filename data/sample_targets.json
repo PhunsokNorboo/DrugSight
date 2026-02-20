@@ -1,37 +1,72 @@
-[
-  {
-    "ensembl_id": "ENSG00000197386",
-    "symbol": "HTT",
-    "name": "Huntingtin",
-    "association_score": 0.95,
-    "uniprot_id": "P42858"
-  },
-  {
-    "ensembl_id": "ENSG00000176697",
-    "symbol": "BDNF",
-    "name": "Brain-derived neurotrophic factor",
-    "association_score": 0.82,
-    "uniprot_id": "P23560"
-  },
-  {
-    "ensembl_id": "ENSG00000155511",
-    "symbol": "GRIA1",
-    "name": "Glutamate ionotropic receptor AMPA type subunit 1",
-    "association_score": 0.74,
-    "uniprot_id": "P42261"
-  },
-  {
-    "ensembl_id": "ENSG00000151623",
-    "symbol": "NR3C1",
-    "name": "Nuclear receptor subfamily 3 group C member 1",
-    "association_score": 0.68,
-    "uniprot_id": "P04150"
-  },
-  {
-    "ensembl_id": "ENSG00000102882",
-    "symbol": "MAPK3",
-    "name": "Mitogen-activated protein kinase 3",
-    "association_score": 0.61,
-    "uniprot_id": "P27361"
-  }
-]
+{
+  "EFO_0000337": [
+    {"ensembl_id": "ENSG00000197386", "symbol": "HTT", "name": "Huntingtin", "association_score": 0.95, "uniprot_id": "P42858"},
+    {"ensembl_id": "ENSG00000176697", "symbol": "BDNF", "name": "Brain-derived neurotrophic factor", "association_score": 0.82, "uniprot_id": "P23560"},
+    {"ensembl_id": "ENSG00000155511", "symbol": "GRIA1", "name": "Glutamate ionotropic receptor AMPA type subunit 1", "association_score": 0.74, "uniprot_id": "P42261"},
+    {"ensembl_id": "ENSG00000151623", "symbol": "NR3C1", "name": "Nuclear receptor subfamily 3 group C member 1", "association_score": 0.68, "uniprot_id": "P04150"},
+    {"ensembl_id": "ENSG00000102882", "symbol": "MAPK3", "name": "Mitogen-activated protein kinase 3", "association_score": 0.61, "uniprot_id": "P27361"}
+  ],
+  "EFO_0000249": [
+    {"ensembl_id": "ENSG00000142192", "symbol": "APP", "name": "Amyloid precursor protein", "association_score": 0.97, "uniprot_id": "P05067"},
+    {"ensembl_id": "ENSG00000080815", "symbol": "PSEN1", "name": "Presenilin 1", "association_score": 0.93, "uniprot_id": "P49768"},
+    {"ensembl_id": "ENSG00000186868", "symbol": "MAPT", "name": "Microtubule associated protein tau", "association_score": 0.89, "uniprot_id": "P10636"},
+    {"ensembl_id": "ENSG00000130203", "symbol": "APOE", "name": "Apolipoprotein E", "association_score": 0.86, "uniprot_id": "P02649"},
+    {"ensembl_id": "ENSG00000186318", "symbol": "BACE1", "name": "Beta-secretase 1", "association_score": 0.78, "uniprot_id": "P56817"}
+  ],
+  "EFO_0000537": [
+    {"ensembl_id": "ENSG00000145335", "symbol": "SNCA", "name": "Synuclein alpha", "association_score": 0.96, "uniprot_id": "P37840"},
+    {"ensembl_id": "ENSG00000188906", "symbol": "LRRK2", "name": "Leucine rich repeat kinase 2", "association_score": 0.91, "uniprot_id": "Q5S007"},
+    {"ensembl_id": "ENSG00000116288", "symbol": "PARK7", "name": "Parkinsonism associated deglycase", "association_score": 0.79, "uniprot_id": "Q99497"},
+    {"ensembl_id": "ENSG00000158828", "symbol": "PINK1", "name": "PTEN induced kinase 1", "association_score": 0.75, "uniprot_id": "Q9BXM7"},
+    {"ensembl_id": "ENSG00000177628", "symbol": "GBA1", "name": "Glucosylceramidase beta 1", "association_score": 0.68, "uniprot_id": "P04062"}
+  ],
+  "EFO_0000253": [
+    {"ensembl_id": "ENSG00000142168", "symbol": "SOD1", "name": "Superoxide dismutase 1", "association_score": 0.95, "uniprot_id": "P00441"},
+    {"ensembl_id": "ENSG00000120948", "symbol": "TARDBP", "name": "TAR DNA binding protein", "association_score": 0.90, "uniprot_id": "Q13148"},
+    {"ensembl_id": "ENSG00000089280", "symbol": "FUS", "name": "FUS RNA binding protein", "association_score": 0.85, "uniprot_id": "P35637"},
+    {"ensembl_id": "ENSG00000147894", "symbol": "C9orf72", "name": "C9orf72-SMCR8 complex subunit", "association_score": 0.82, "uniprot_id": "Q96LT7"},
+    {"ensembl_id": "ENSG00000123240", "symbol": "OPTN", "name": "Optineurin", "association_score": 0.72, "uniprot_id": "Q96CV9"}
+  ],
+  "EFO_0000311": [
+    {"ensembl_id": "ENSG00000196126", "symbol": "HLA-DRB1", "name": "Major histocompatibility complex class II DR beta 1", "association_score": 0.94, "uniprot_id": "P01911"},
+    {"ensembl_id": "ENSG00000168685", "symbol": "IL7R", "name": "Interleukin 7 receptor", "association_score": 0.85, "uniprot_id": "P16871"},
+    {"ensembl_id": "ENSG00000101017", "symbol": "CD40", "name": "CD40 molecule", "association_score": 0.76, "uniprot_id": "P25942"},
+    {"ensembl_id": "ENSG00000067182", "symbol": "TNFRSF1A", "name": "TNF receptor superfamily member 1A", "association_score": 0.71, "uniprot_id": "P19438"},
+    {"ensembl_id": "ENSG00000134460", "symbol": "IL2RA", "name": "Interleukin 2 receptor subunit alpha", "association_score": 0.65, "uniprot_id": "P01589"}
+  ],
+  "EFO_0000341": [
+    {"ensembl_id": "ENSG00000167207", "symbol": "NOD2", "name": "Nucleotide binding oligomerization domain containing 2", "association_score": 0.96, "uniprot_id": "Q9HC29"},
+    {"ensembl_id": "ENSG00000085978", "symbol": "ATG16L1", "name": "Autophagy related 16 like 1", "association_score": 0.88, "uniprot_id": "Q676U5"},
+    {"ensembl_id": "ENSG00000162594", "symbol": "IL23R", "name": "Interleukin 23 receptor", "association_score": 0.83, "uniprot_id": "Q5VWK5"},
+    {"ensembl_id": "ENSG00000237693", "symbol": "IRGM", "name": "Immunity related GTPase M", "association_score": 0.74, "uniprot_id": "A1A4Y4"},
+    {"ensembl_id": "ENSG00000232810", "symbol": "TNF", "name": "Tumor necrosis factor", "association_score": 0.69, "uniprot_id": "P01375"}
+  ],
+  "EFO_0000685": [
+    {"ensembl_id": "ENSG00000213689", "symbol": "TREX1", "name": "Three prime repair exonuclease 1", "association_score": 0.91, "uniprot_id": "Q9NSU2"},
+    {"ensembl_id": "ENSG00000118503", "symbol": "TNFAIP3", "name": "TNF alpha induced protein 3", "association_score": 0.86, "uniprot_id": "P21580"},
+    {"ensembl_id": "ENSG00000128604", "symbol": "IRF5", "name": "Interferon regulatory factor 5", "association_score": 0.80, "uniprot_id": "Q13568"},
+    {"ensembl_id": "ENSG00000138378", "symbol": "STAT4", "name": "Signal transducer and activator of transcription 4", "association_score": 0.73, "uniprot_id": "Q14765"},
+    {"ensembl_id": "ENSG00000136573", "symbol": "BLK", "name": "BLK proto-oncogene Src family tyrosine kinase", "association_score": 0.66, "uniprot_id": "P51451"}
+  ],
+  "EFO_0000305": [
+    {"ensembl_id": "ENSG00000001626", "symbol": "CFTR", "name": "CF transmembrane conductance regulator", "association_score": 0.97, "uniprot_id": "P13569"},
+    {"ensembl_id": "ENSG00000111319", "symbol": "SCNN1A", "name": "Sodium channel epithelial 1 subunit alpha", "association_score": 0.82, "uniprot_id": "P37088"},
+    {"ensembl_id": "ENSG00000174502", "symbol": "SLC26A9", "name": "Solute carrier family 26 member 9", "association_score": 0.72, "uniprot_id": "Q7LBE3"},
+    {"ensembl_id": "ENSG00000105329", "symbol": "TGFB1", "name": "Transforming growth factor beta 1", "association_score": 0.65, "uniprot_id": "P01137"},
+    {"ensembl_id": "ENSG00000165471", "symbol": "MBL2", "name": "Mannose binding lectin 2", "association_score": 0.58, "uniprot_id": "P11226"}
+  ],
+  "EFO_0000616": [
+    {"ensembl_id": "ENSG00000110092", "symbol": "CCND1", "name": "Cyclin D1", "association_score": 0.92, "uniprot_id": "P24385"},
+    {"ensembl_id": "ENSG00000141510", "symbol": "TP53", "name": "Tumor protein p53", "association_score": 0.88, "uniprot_id": "P04637"},
+    {"ensembl_id": "ENSG00000133703", "symbol": "KRAS", "name": "KRAS proto-oncogene GTPase", "association_score": 0.79, "uniprot_id": "P01116"},
+    {"ensembl_id": "ENSG00000136997", "symbol": "MYC", "name": "MYC proto-oncogene bHLH transcription factor", "association_score": 0.73, "uniprot_id": "P01106"},
+    {"ensembl_id": "ENSG00000068078", "symbol": "FGFR3", "name": "Fibroblast growth factor receptor 3", "association_score": 0.67, "uniprot_id": "P22607"}
+  ],
+  "EFO_0000712": [
+    {"ensembl_id": "ENSG00000144285", "symbol": "SCN1A", "name": "Sodium voltage-gated channel alpha subunit 1", "association_score": 0.95, "uniprot_id": "P35498"},
+    {"ensembl_id": "ENSG00000075043", "symbol": "KCNQ2", "name": "Potassium voltage-gated channel subfamily Q member 2", "association_score": 0.87, "uniprot_id": "O43526"},
+    {"ensembl_id": "ENSG00000022355", "symbol": "GABRA1", "name": "Gamma-aminobutyric acid type A receptor subunit alpha 1", "association_score": 0.80, "uniprot_id": "P14867"},
+    {"ensembl_id": "ENSG00000157103", "symbol": "SLC6A1", "name": "Solute carrier family 6 member 1", "association_score": 0.72, "uniprot_id": "P30531"},
+    {"ensembl_id": "ENSG00000183454", "symbol": "GRIN2A", "name": "Glutamate ionotropic receptor NMDA type subunit 2A", "association_score": 0.65, "uniprot_id": "Q12879"}
+  ]
+}

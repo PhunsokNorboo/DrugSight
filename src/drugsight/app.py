@@ -72,14 +72,10 @@ _WEIGHTS: dict[str, float] = {
     "oral_bioavailability": 0.10,
 }
 
-# UniProt-to-AlphaFold URL mapping for demo viewer
-_ALPHAFOLD_URLS: dict[str, str] = {
-    "P42858": "https://alphafold.ebi.ac.uk/files/AF-P42858-F1-model_v4.pdb",
-    "P23560": "https://alphafold.ebi.ac.uk/files/AF-P23560-F1-model_v4.pdb",
-    "P42261": "https://alphafold.ebi.ac.uk/files/AF-P42261-F1-model_v4.pdb",
-    "P04150": "https://alphafold.ebi.ac.uk/files/AF-P04150-F1-model_v4.pdb",
-    "P27361": "https://alphafold.ebi.ac.uk/files/AF-P27361-F1-model_v4.pdb",
-}
+# AlphaFold URL builder -- works for any UniProt ID
+def _alphafold_url(uniprot_id: str) -> str:
+    """Return the AlphaFold PDB URL for a given UniProt accession."""
+    return f"https://alphafold.ebi.ac.uk/files/AF-{uniprot_id}-F1-model_v4.pdb"
 
 # ---------------------------------------------------------------------------
 # Custom CSS -- professional biotech aesthetic
@@ -202,24 +198,42 @@ section[data-testid="stSidebar"] .stMarkdown h2 {
 # Data helpers
 # ---------------------------------------------------------------------------
 @st.cache_data(show_spinner="Loading demo data ...")
-def _load_demo_data() -> "pd.DataFrame":
-    """Load and enrich pre-computed demo results.
+def _load_demo_data(disease_id: str) -> "pd.DataFrame":
+    """Load and enrich pre-computed demo results for the selected disease.
 
-    Merges docking CSVs with training feature data to produce a single
-    DataFrame that contains all SCORING_FEATURES plus a composite score.
+    Loads the targets JSON (dict keyed by disease_id), filters docking
+    results to only that disease's target proteins, and merges with
+    training feature data to produce a single DataFrame containing all
+    SCORING_FEATURES plus a composite score.
     """
+    import json
+
     import pandas as pd
 
     docking = pd.read_csv(DATA_DIR / "sample_docking_results.csv")
     training = pd.read_csv(DATA_DIR / "training_repurposing_cases.csv")
     drugbank = pd.read_csv(DATA_DIR / "sample_drugbank.csv")
 
-    # Filter training data to Huntington's (EFO_0000337) for demo
-    hd_training = training[training["disease_id"] == "EFO_0000337"].copy()
+    # Load targets for the selected disease from the JSON dict
+    targets_path = DATA_DIR / "sample_targets.json"
+    if targets_path.exists():
+        with open(targets_path, "r") as fh:
+            all_targets = json.load(fh)
+        disease_targets = all_targets.get(disease_id, [])
+        disease_uniprots = {t["uniprot_id"] for t in disease_targets}
+    else:
+        disease_uniprots = set()
+
+    # Filter docking results to this disease's target proteins
+    if disease_uniprots:
+        docking = docking[docking["uniprot_id"].isin(disease_uniprots)].copy()
+
+    # Filter training data to the selected disease
+    disease_training = training[training["disease_id"] == disease_id].copy()
 
     # Merge docking with training features on drugbank_id
     merged = docking.merge(
-        hd_training[
+        disease_training[
             ["drugbank_id"] + SCORING_FEATURES + ["repurposing_success"]
         ],
         on="drugbank_id",
@@ -439,10 +453,7 @@ def _render_protein_viewer(uniprot_id: str, target_symbol: str) -> None:
         viewer.addModel(pdb_data, "pdb")
     else:
         # Fetch directly from AlphaFold
-        url = _ALPHAFOLD_URLS.get(
-            uniprot_id,
-            f"https://alphafold.ebi.ac.uk/files/AF-{uniprot_id}-F1-model_v4.pdb",
-        )
+        url = _alphafold_url(uniprot_id)
         viewer.addModel("", "pdb")
         # Use JavaScript fetch to load the model from AlphaFold
         viewer_script = f"""
@@ -731,7 +742,7 @@ def _render_sidebar() -> tuple[str, str, float, int, bool]:
         demo_mode = st.toggle("Demo Mode", value=True, help="Load pre-computed results. Turn off to run the full pipeline (requires local environment).")
 
         if demo_mode:
-            st.info("Using pre-computed Huntington's disease results.")
+            st.info(f"Using pre-computed results for {disease_label}.")
         else:
             st.warning("Live mode requires AutoDock Vina, RDKit, and network access.")
 
@@ -780,14 +791,14 @@ def main() -> None:
 
     # -- Load data ---
     if demo_mode:
-        df_all = _load_demo_data()
+        df_all = _load_demo_data(disease_id)
     else:
         st.error(
             "Live pipeline is not yet available. Enable **Demo Mode** in the sidebar."
         )
         st.stop()
 
-    # Filter to selected disease's targets (demo data is Huntington's)
+    # Limit to user-selected max results
     df = df_all.head(max_results).copy()
 
     # ====================================================================
