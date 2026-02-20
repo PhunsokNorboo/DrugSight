@@ -249,14 +249,17 @@ def dock_single(
         "--size_z", str(box_size[2]),
         "--exhaustiveness", str(exhaustiveness),
         "--out", str(output_file),
-        "--log", str(log_file),
     ]
 
     logger.info("Docking %s against %s", ligand_pdbqt.name, receptor_pdbqt.name)
-    subprocess.run(cmd, check=True, capture_output=True, text=True)
+    proc = subprocess.run(cmd, check=True, capture_output=True, text=True)
 
-    # Parse the log to extract the best (first) binding affinity.
-    affinity = _parse_vina_log(log_file)
+    # Vina 1.2.7+ prints the results table to stdout (no --log flag).
+    # Save stdout as the log file for reference.
+    log_file.write_text(proc.stdout)
+
+    # Parse the results table from stdout.
+    affinity = _parse_vina_output(proc.stdout)
 
     logger.info("Best affinity: %.2f kcal/mol (%s)", affinity, ligand_pdbqt.name)
 
@@ -267,8 +270,8 @@ def dock_single(
     )
 
 
-def _parse_vina_log(log_path: Path) -> float:
-    """Extract the top-ranked binding affinity from a Vina log file.
+def _parse_vina_output(output: str) -> float:
+    """Extract the top-ranked binding affinity from Vina's stdout.
 
     Vina output contains a results table whose first data row begins with
     ``   1``.  The second whitespace-separated token on that line is the
@@ -279,19 +282,18 @@ def _parse_vina_log(log_path: Path) -> float:
     RuntimeError
         If the expected table row is not found.
     """
-    with open(log_path, "r") as fh:
-        for line in fh:
-            stripped = line.strip()
-            if stripped.startswith("1"):
-                parts = stripped.split()
-                if len(parts) >= 2:
-                    try:
-                        return float(parts[1])
-                    except ValueError:
-                        continue
+    for line in output.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("1"):
+            parts = stripped.split()
+            if len(parts) >= 2:
+                try:
+                    return float(parts[1])
+                except ValueError:
+                    continue
 
     raise RuntimeError(
-        f"Could not parse binding affinity from Vina log: {log_path}"
+        f"Could not parse binding affinity from Vina output:\n{output[:500]}"
     )
 
 

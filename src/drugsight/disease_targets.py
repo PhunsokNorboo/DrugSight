@@ -51,7 +51,6 @@ def _get_session() -> "requests.Session":
     session = requests.Session()
     session.headers.update(
         {
-            "Content-Type": "application/json",
             "Accept": "application/json",
         }
     )

@@ -8,9 +8,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="DrugSight: AI-Powered Drug Repurposing Engine",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Example: python -m drugsight EFO_0000337 --demo",
+        epilog="Example: python -m drugsight MONDO_0007739 --demo",
     )
-    parser.add_argument("disease_id", nargs="?", default="EFO_0000337",
+    parser.add_argument("disease_id", nargs="?", default="MONDO_0007739",
                        help="EFO disease ID (default: Huntington's)")
     parser.add_argument("--drugbank-csv", default=None,
                        help="Path to DrugBank CSV (default: data/sample_drugbank.csv)")

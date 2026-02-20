@@ -79,7 +79,7 @@ def test_fetch_structure_downloads_pdb(tmp_path: Path):
 
     assert result is not None
     assert result.exists()
-    assert result.name == filename
+    assert result.name == f"AF-{uid}-F1-model.pdb"
     assert result.read_bytes() == SAMPLE_PDB_CONTENT
 
 

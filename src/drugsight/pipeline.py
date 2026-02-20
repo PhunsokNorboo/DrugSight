@@ -12,7 +12,7 @@ Usage
 Full pipeline (requires API access, Vina, and RDKit)::
 
     from drugsight.pipeline import run_pipeline
-    ranked = run_pipeline("EFO_0000337", "data/drugbank.csv")
+    ranked = run_pipeline("MONDO_0007739", "data/drugbank.csv")
 
 Quick demo (sample data only)::
 
@@ -52,7 +52,7 @@ def run_pipeline(
     Parameters
     ----------
     disease_id:
-        An EFO identifier (e.g. ``"EFO_0000337"`` for Huntington disease).
+        An EFO identifier (e.g. ``"MONDO_0007739"`` for Huntington disease).
     drugbank_csv:
         Path to the DrugBank CSV file used by the drug-library module.
     training_csv:
@@ -231,7 +231,7 @@ def run_pipeline(
 
 
 def run_pipeline_demo(
-    disease_id: str = "EFO_0000337",
+    disease_id: str = "MONDO_0007739",
 ) -> pd.DataFrame:
     """Run a quick demo of the scoring pipeline using pre-computed sample data.
 
@@ -244,7 +244,7 @@ def run_pipeline_demo(
     ----------
     disease_id:
         EFO identifier used to label the demo run.  Defaults to
-        ``"EFO_0000337"`` (Huntington disease).
+        ``"MONDO_0007739"`` (Huntington disease).
 
     Returns
     -------

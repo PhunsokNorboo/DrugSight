@@ -110,6 +110,7 @@ def _request_with_retry(
 def fetch_structure(
     uniprot_id: str,
     output_dir: Path | None = None,
+    pdb_url: str | None = None,
 ) -> Path | None:
     """Download an AlphaFold PDB structure for *uniprot_id*.
 
@@ -119,6 +120,8 @@ def fetch_structure(
         UniProt accession (e.g. ``"P04637"``).
     output_dir:
         Directory to save the PDB file. Defaults to ``config.STRUCTURES_DIR``.
+    pdb_url:
+        Direct URL to download. If None, constructs from template.
 
     Returns
     -------
@@ -128,7 +131,7 @@ def fetch_structure(
     if output_dir is None:
         output_dir = STRUCTURES_DIR
 
-    filename = _MODEL_TEMPLATE.format(uniprot_id=uniprot_id)
+    filename = f"AF-{uniprot_id}-F1-model.pdb"
     dest = output_dir / filename
 
     # Cache: skip download if file already exists
@@ -136,7 +139,7 @@ def fetch_structure(
         logger.debug("Structure already cached: %s", dest)
         return dest
 
-    url = _PDB_URL_TEMPLATE.format(filename=filename)
+    url = pdb_url or _PDB_URL_TEMPLATE.format(filename=_MODEL_TEMPLATE.format(uniprot_id=uniprot_id))
     logger.info("Downloading AlphaFold structure for %s from %s", uniprot_id, url)
 
     resp = _request_with_retry("GET", url, stream=True)
@@ -195,8 +198,8 @@ def get_confidence(uniprot_id: str) -> AlphaFoldConfidence | None:
 
     confidence: AlphaFoldConfidence = {
         "uniprot_id": uniprot_id,
-        "avg_plddt": float(entry["confidenceAvgLocalScore"]),
-        "model_url": str(entry["pdbUrl"]),
+        "avg_plddt": float(entry.get("globalMetricValue") or entry.get("confidenceAvgLocalScore", 0)),
+        "model_url": str(entry.get("pdbUrl", f"https://alphafold.ebi.ac.uk/files/AF-{uniprot_id}-F1-model_v4.pdb")),
         "version": int(entry["latestVersion"]),
     }
 
@@ -260,8 +263,8 @@ def fetch_structures_batch(
             )
             continue
 
-        # --- Download structure ------------------------------------------------
-        path = fetch_structure(uid, output_dir=output_dir)
+        # --- Download structure (use URL from confidence metadata) -------------
+        path = fetch_structure(uid, output_dir=output_dir, pdb_url=conf["model_url"])
         if path is None:
             logger.warning(
                 "Skipping %s — structure download failed despite valid metadata",

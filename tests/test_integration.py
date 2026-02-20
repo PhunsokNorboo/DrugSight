@@ -206,7 +206,7 @@ class TestDiseaseToStructuresIntegration:
             )
 
         # -- Execute the data flow --
-        targets_df = get_disease_targets("EFO_0000337", min_score=0.5)
+        targets_df = get_disease_targets("MONDO_0007739", min_score=0.5)
 
         # Verify targets_df conforms to the schema contract.
         assert list(targets_df.columns) == TARGET_COLUMNS
@@ -256,7 +256,7 @@ class TestDiseaseToStructuresIntegration:
             status=200,
         )
 
-        targets_df = get_disease_targets("EFO_0000337", min_score=0.5)
+        targets_df = get_disease_targets("MONDO_0007739", min_score=0.5)
         uniprot_ids = targets_df["uniprot_id"].dropna().tolist()
 
         pdb_paths, confidences = fetch_structures_batch(

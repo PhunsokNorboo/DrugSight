@@ -89,17 +89,14 @@ def test_dock_single_parses_log(
     ligand = tmp_path / "ligand.pdbqt"
     ligand.write_text("DUMMY LIGAND")
 
-    # Make subprocess.run succeed and create the mock output/log files.
+    # Make subprocess.run succeed and create the mock output file.
     def side_effect(cmd, **kwargs):
-        # Parse the --out and --log arguments from the command.
+        # Parse the --out argument from the command.
         out_idx = cmd.index("--out")
-        log_idx = cmd.index("--log")
         out_file = Path(cmd[out_idx + 1])
-        log_file = Path(cmd[log_idx + 1])
         out_file.parent.mkdir(parents=True, exist_ok=True)
         out_file.write_text("DOCKED OUTPUT")
-        log_file.write_text(_VINA_LOG)
-        return MagicMock(returncode=0, stdout="", stderr="")
+        return MagicMock(returncode=0, stdout=_VINA_LOG, stderr="")
 
     mock_run.side_effect = side_effect
 
@@ -176,16 +173,13 @@ def test_batch_dock_handles_failures(
             pdbqt.write_text("LIGAND A PDBQT")
             return MagicMock(returncode=0, stdout="", stderr="")
 
-        # dock_single for DrugA (vina) — succeed: create output + log files.
+        # dock_single for DrugA (vina) — succeed: create output file, return results in stdout.
         if "/vina" in cmd_str and "--out" in cmd_str:
             out_idx = cmd.index("--out")
-            log_idx = cmd.index("--log")
             out_file = Path(cmd[out_idx + 1])
-            log_file = Path(cmd[log_idx + 1])
             out_file.parent.mkdir(parents=True, exist_ok=True)
             out_file.write_text("DOCKED OUTPUT A")
-            log_file.write_text(_VINA_LOG)
-            return MagicMock(returncode=0, stdout="", stderr="")
+            return MagicMock(returncode=0, stdout=_VINA_LOG, stderr="")
 
         # prepare_ligand for DrugB (obabel) — FAIL.
         if "/obabel" in cmd_str and "DB00002" in cmd_str:

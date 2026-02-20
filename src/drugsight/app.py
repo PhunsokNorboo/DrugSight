@@ -36,16 +36,16 @@ st.set_page_config(
 # Constants
 # ---------------------------------------------------------------------------
 RARE_DISEASES: dict[str, str] = {
-    "Huntington's disease": "EFO_0000337",
-    "Alzheimer's disease": "EFO_0000249",
-    "Parkinson's disease": "EFO_0000537",
-    "Amyotrophic lateral sclerosis": "EFO_0000253",
-    "Multiple sclerosis": "EFO_0000311",
-    "Crohn's disease": "EFO_0000341",
-    "Systemic lupus erythematosus": "EFO_0000685",
-    "Cystic fibrosis": "EFO_0000305",
-    "Multiple myeloma": "EFO_0000616",
-    "Epilepsy": "EFO_0000712",
+    "Huntington's disease": "MONDO_0007739",
+    "Alzheimer's disease": "MONDO_0004975",
+    "Parkinson's disease": "MONDO_0005180",
+    "Amyotrophic lateral sclerosis": "MONDO_0004976",
+    "Multiple sclerosis": "MONDO_0005301",
+    "Crohn's disease": "EFO_0000384",
+    "Systemic lupus erythematosus": "MONDO_0007915",
+    "Cystic fibrosis": "MONDO_0009061",
+    "Multiple myeloma": "EFO_0001378",
+    "Epilepsy": "EFO_0000474",
 }
 
 # Feature display names for charts
