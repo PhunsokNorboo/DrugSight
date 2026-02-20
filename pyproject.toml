@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.backends"
+
+[project]
+name = "drugsight"
+version = "0.1.0"
+description = "AI-Powered Drug Repurposing Engine Built on AlphaFold's Open Data"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.31",
+    "pandas>=2.1",
+    "biopython>=1.83",
+    "lightgbm>=4.2",
+    "shap>=0.44",
+    "streamlit>=1.30",
+    "plotly>=5.18",
+    "stmol>=0.0.9",
+    "fpdf2>=2.7",
+    "meeko>=0.5",
+]
+
+[project.optional-dependencies]
+rdkit = ["rdkit>=2023.9"]
+dev = [
+    "pytest>=7.4",
+    "pytest-mock>=3.12",
+    "responses>=0.24",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/drugsight"]

@@ -1,0 +1,21 @@
+drugbank_id,name,smiles,status,indication,patent_expired,oral_bioavailability
+DB00740,Riluzole,C1=CC=C(C(=C1)OC2=NC(=NS2)N)F,approved,ALS,1,0.6
+DB01043,Memantine,C1C2CC3CC1CC(C2)(C3)N,approved,Alzheimer's Disease,1,1.0
+DB00181,Baclofen,C(CC1=CC=C(C=C1)Cl)(CN)C(=O)O,approved,Spasticity,1,0.7
+DB01050,Ibuprofen,CC(C)CC1=CC=C(C=C1)C(C)C(=O)O,approved,Pain/Inflammation,1,0.8
+DB00331,Metformin,CN(C)C(=N)NC(=N)N,approved,Type 2 Diabetes,1,0.5
+DB00203,Sildenafil,CCCC1=NN(C2=C1N=C(NC2=O)C3=C(C=CC(=C3)S(=O)(=O)N4CCN(CC4)C)OCC)C,approved,Erectile Dysfunction,0,0.4
+DB01041,Thalidomide,C1CC(=O)NC(=O)C1N2C(=O)C3=CC=CC=C3C2=O,approved,Multiple Myeloma,1,0.67
+DB00350,Minoxidil,NC1=C(N)C(=CC(=N1)N)N(=O)=O,approved,Hair Loss,1,0.9
+DB00945,Aspirin,CC(=O)OC1=CC=CC=C1C(=O)O,approved,Pain/Blood Thinning,1,0.68
+DB00675,Tamoxifen,CCC(=C(C1=CC=CC=C1)C2=CC=CC=C2)C3=CC=C(C=C3)OCCN(C)C,approved,Breast Cancer,1,0.2
+DB00564,Carbamazepine,C1=CC=C2C(=C1)C=CC3=CC=CC=C3N2C(=O)N,approved,Epilepsy,1,0.75
+DB00252,Phenytoin,C1=CC=C(C=C1)C2(C(=O)NC(=O)N2)C3=CC=CC=C3,approved,Epilepsy,1,0.7
+DB01174,Phenobarbital,CCC1(C(=O)NC(=O)NC1=O)C2=CC=CC=C2,approved,Epilepsy,1,0.8
+DB00334,Olanzapine,CN1CCN(CC1)C2=NC3=CC=CC=C3NC4=C2C=C(C=C4)C,approved,Schizophrenia,1,0.6
+DB01186,Pergolide,CCC(C1CC2=CC3=C(C=C2CN1CC=C)CNC3)SC,approved,Parkinson's Disease,1,0.55
+DB00363,Clozapine,CN1CCN(CC1)C2=NC3=CC(=CC=C3NC4=CC=CC=C42)Cl,approved,Schizophrenia,1,0.5
+DB00468,Quinine,COC1=CC2=C(C=C1)N=CC2C(CC3CC4CCN3CC4C=C)O,approved,Malaria,1,0.76
+DB00641,Simvastatin,CCC(C)(C)C(=O)OC1CC(C=C2C1C(C(C=C2)C)CCC3CC(CC(=O)O3)O)C,approved,Hyperlipidemia,1,0.05
+DB00563,Methotrexate,CN(CC1=CN=C2N=C(N=C(N2C1=N)N)N)C3=CC=C(C=C3)C(=O)NC(CCC(=O)O)C(=O)O,approved,Cancer/Autoimmune,1,0.33
+DB00477,Chlorpromazine,CN(C)CCCN1C2=CC=CC=C2SC3=C1C=C(C=C3)Cl,approved,Schizophrenia,1,0.5

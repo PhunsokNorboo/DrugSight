@@ -1,0 +1,37 @@
+[
+  {
+    "ensembl_id": "ENSG00000197386",
+    "symbol": "HTT",
+    "name": "Huntingtin",
+    "association_score": 0.95,
+    "uniprot_id": "P42858"
+  },
+  {
+    "ensembl_id": "ENSG00000176697",
+    "symbol": "BDNF",
+    "name": "Brain-derived neurotrophic factor",
+    "association_score": 0.82,
+    "uniprot_id": "P23560"
+  },
+  {
+    "ensembl_id": "ENSG00000155511",
+    "symbol": "GRIA1",
+    "name": "Glutamate ionotropic receptor AMPA type subunit 1",
+    "association_score": 0.74,
+    "uniprot_id": "P42261"
+  },
+  {
+    "ensembl_id": "ENSG00000151623",
+    "symbol": "NR3C1",
+    "name": "Nuclear receptor subfamily 3 group C member 1",
+    "association_score": 0.68,
+    "uniprot_id": "P04150"
+  },
+  {
+    "ensembl_id": "ENSG00000102882",
+    "symbol": "MAPK3",
+    "name": "Mitogen-activated protein kinase 3",
+    "association_score": 0.61,
+    "uniprot_id": "P27361"
+  }
+]
