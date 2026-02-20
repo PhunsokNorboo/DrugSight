@@ -330,6 +330,9 @@ def _run_live_pipeline(disease_id: str, disease_label: str, min_score: float) ->
             docking_frames.append(dock_df)
 
         all_docking = pd.concat(docking_frames, ignore_index=True)
+        if all_docking.empty:
+            st.error("All docking runs failed. Check that AutoDock Vina and Open Babel are installed.")
+            st.stop()
 
         # Step 5: ML Scoring
         progress.progress(85, text="Step 5/6: Scoring candidates with ML model...")
@@ -524,7 +527,7 @@ def _render_protein_viewer(uniprot_id: str, target_symbol: str) -> None:
         )
         return
 
-    pdb_path = STRUCTURES_DIR / f"{uniprot_id}.pdb"
+    pdb_path = STRUCTURES_DIR / f"AF-{uniprot_id}-F1-model.pdb"
     pdb_data: str | None = None
 
     if pdb_path.exists():

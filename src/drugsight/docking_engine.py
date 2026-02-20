@@ -27,7 +27,14 @@ logger = logging.getLogger(__name__)
 
 def _require_binary(name: str) -> str:
     """Return the absolute path of *name* on PATH, or raise RuntimeError."""
+    # Check PATH first, then common local install locations.
     location = shutil.which(name)
+    if location is None:
+        for extra_dir in (Path.home() / "bin", Path("/usr/local/bin")):
+            candidate = extra_dir / name
+            if candidate.is_file():
+                location = str(candidate)
+                break
     if location is None:
         raise RuntimeError(
             f"'{name}' not found on PATH. "
