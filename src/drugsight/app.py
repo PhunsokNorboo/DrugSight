@@ -283,6 +283,89 @@ def _load_demo_data(disease_id: str) -> "pd.DataFrame":
     return merged
 
 
+def _run_live_pipeline(disease_id: str, disease_label: str, min_score: float) -> "pd.DataFrame":
+    """Run the full DrugSight pipeline with live API calls and real docking."""
+    import pandas as pd
+
+    from drugsight.config import DATA_DIR
+
+    progress = st.progress(0, text="Initializing pipeline...")
+
+    try:
+        # Step 1: Disease targets
+        progress.progress(5, text="Step 1/6: Querying Open Targets for disease targets...")
+        from drugsight.disease_targets import get_disease_targets
+        targets_df = get_disease_targets(disease_id, min_score=min_score)
+        if targets_df.empty:
+            st.error(f"No targets found for {disease_label} (score >= {min_score}).")
+            st.stop()
+
+        # Step 2: AlphaFold structures
+        progress.progress(15, text="Step 2/6: Downloading AlphaFold protein structures...")
+        from drugsight.alphafold_client import fetch_structures_batch
+        uniprot_ids = targets_df["uniprot_id"].dropna().tolist()
+        uniprot_ids = [uid for uid in uniprot_ids if uid]
+        pdb_paths, confidences = fetch_structures_batch(uniprot_ids, min_plddt=70.0)
+        if not pdb_paths:
+            st.error("No AlphaFold structures passed the confidence filter.")
+            st.stop()
+
+        # Step 3: Drug library
+        progress.progress(30, text="Step 3/6: Preparing drug library with RDKit...")
+        from drugsight.drug_library import prepare_library
+        drugbank_csv = DATA_DIR / "sample_drugbank.csv"
+        drug_df = prepare_library(drugbank_csv)
+
+        # Step 4: Molecular docking
+        from drugsight.docking_engine import batch_dock
+        docking_frames = []
+        n_targets = len(pdb_paths)
+        for i, pdb_path in enumerate(pdb_paths):
+            uid = pdb_path.stem.replace("AF-", "").replace("-F1-model", "")
+            target_row = targets_df[targets_df["uniprot_id"] == uid]
+            symbol = target_row.iloc[0]["symbol"] if not target_row.empty else uid
+            pct = 30 + int(50 * (i / n_targets))
+            progress.progress(pct, text=f"Step 4/6: Docking against {symbol} ({i+1}/{n_targets})...")
+            dock_df = batch_dock(pdb_path, drug_df, uid, symbol)
+            docking_frames.append(dock_df)
+
+        all_docking = pd.concat(docking_frames, ignore_index=True)
+
+        # Step 5: ML Scoring
+        progress.progress(85, text="Step 5/6: Scoring candidates with ML model...")
+        from drugsight.ml_scorer import merge_features, score_candidates, train_ranker
+        feature_df = merge_features(all_docking, confidences, targets_df)
+
+        training_csv = DATA_DIR / "training_repurposing_cases.csv"
+        if training_csv.exists():
+            model = train_ranker(training_csv)
+        else:
+            from drugsight.ml_scorer import _WeightedSumScorer
+            model = _WeightedSumScorer()
+
+        scored_df = score_candidates(feature_df, model)
+
+        # Step 6: Finalize
+        progress.progress(95, text="Step 6/6: Preparing results...")
+
+        # Add top contributing factor
+        scored_df["top_contributing_factor"] = scored_df.apply(_top_factor, axis=1)
+
+        # Ensure patent_expired is integer
+        if "patent_expired" in scored_df.columns:
+            scored_df["patent_expired"] = scored_df["patent_expired"].astype("Int64")
+
+        progress.progress(100, text="Pipeline complete!")
+        progress.empty()
+
+        return scored_df
+
+    except Exception as e:
+        progress.empty()
+        st.error(f"Pipeline failed: {e}")
+        st.stop()
+
+
 def _normalize_series(s: "pd.Series") -> "pd.Series":
     """Min-max normalize a Series to [0, 1]."""
     mn, mx = s.min(), s.max()
@@ -739,21 +822,12 @@ def _render_sidebar() -> tuple[str, str, float, int, bool]:
 
         st.markdown("---")
 
-        demo_mode = st.toggle("Demo Mode", value=True, help="Load pre-computed results. Turn off to run the full pipeline (requires local environment).")
+        demo_mode = st.toggle("Demo Mode", value=True, help="Load pre-computed results. Turn off to run the full pipeline with live APIs and real docking.")
 
         if demo_mode:
             st.info(f"Using pre-computed results for {disease_label}.")
         else:
-            st.warning("Live mode requires AutoDock Vina, RDKit, and network access.")
-
-        st.button(
-            "Run Pipeline",
-            disabled=demo_mode,
-            help="Coming soon \u2014 requires full environment with AutoDock Vina and RDKit."
-            if demo_mode
-            else "Execute the full drug repurposing pipeline.",
-            use_container_width=True,
-        )
+            st.success("Live mode: real APIs + AutoDock Vina docking.")
 
         st.markdown("---")
         st.markdown(
@@ -779,10 +853,10 @@ def main() -> None:
     disease_id, disease_label, min_assoc, max_results, demo_mode = _render_sidebar()
 
     # -- Header ---
+    mode_badge = '<span class="demo-badge">DEMO</span>' if demo_mode else '<span class="demo-badge" style="background:rgba(52,211,153,0.15);color:#34d399;border-color:rgba(52,211,153,0.3);">LIVE</span>'
     st.markdown(
         '<div class="main-header">'
-        "<h1>\U0001f52c DrugSight: AI-Powered Drug Repurposing Engine"
-        '<span class="demo-badge">DEMO</span></h1>'
+        f"<h1>\U0001f52c DrugSight: AI-Powered Drug Repurposing Engine{mode_badge}</h1>"
         "<p>Built on AlphaFold's Open Protein Structure Database "
         "\u2022 Open Targets \u2022 AutoDock Vina</p>"
         "</div>",
@@ -793,10 +867,7 @@ def main() -> None:
     if demo_mode:
         df_all = _load_demo_data(disease_id)
     else:
-        st.error(
-            "Live pipeline is not yet available. Enable **Demo Mode** in the sidebar."
-        )
-        st.stop()
+        df_all = _run_live_pipeline(disease_id, disease_label, min_assoc)
 
     # Best-per-drug: keep only the highest-scoring row per drug for the
     # candidates table so the same drug doesn't dominate every rank.
