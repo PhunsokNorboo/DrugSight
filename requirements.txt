@@ -1,0 +1,10 @@
+requests>=2.31
+pandas>=2.1
+biopython>=1.83
+lightgbm>=4.2
+shap>=0.44
+streamlit>=1.30
+plotly>=5.18
+stmol>=0.0.9
+fpdf2>=2.7
+meeko>=0.5
