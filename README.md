@@ -137,7 +137,7 @@ One command. Disease in, ranked drug candidates out.
 
 ```bash
 # Clone the repository
-git clone https://github.com/username/drugsight.git
+git clone https://github.com/PhunsokNorboo/DrugSight.git
 cd drugsight
 
 # Install the package
@@ -382,9 +382,9 @@ If you use DrugSight in your research, please cite:
 ```bibtex
 @software{drugsight2026,
   title     = {DrugSight: AI-Powered Drug Repurposing Engine Built on AlphaFold's Open Data},
-  author    = {Phuntsok Norbu},
+  author    = {Phunsok Norboo},
   year      = {2026},
-  url       = {https://github.com/username/drugsight},
+  url       = {https://github.com/PhunsokNorboo/DrugSight},
   version   = {0.1.0},
   license   = {MIT}
 }
